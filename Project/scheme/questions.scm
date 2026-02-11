@@ -7,8 +7,11 @@
 ;; Returns a list of two-element lists
 (define (enumerate s)
   ; BEGIN PROBLEM 15
-  'replace-this-line
-  )
+  (define (helper current_s index)
+    (if (null? current_s)
+        nil
+        (cons (cons index (cons (car current_s) nil)) (helper (cdr current_s) (+ index 1)))))
+  (helper s 0))
   ; END PROBLEM 15
 
 ;; Problem 16
@@ -17,8 +20,12 @@
 ;; the merged lists.
 (define (merge ordered? s1 s2)
   ; BEGIN PROBLEM 16
-  'replace-this-line
-  )
+  (cond ((null? s1) s2)
+        ((null? s2) s1)
+        ((ordered? (car s1) (car s2)) (cons (car s1) (merge ordered? (cdr s1) s2)))
+        (else                         (cons (car s2) (merge ordered? s1 (cdr s2))))
+     )
+     )
   ; END PROBLEM 16
 
 ;; Optional Problem 2
@@ -36,12 +43,12 @@
 (define (let-to-lambda expr)
   (cond ((atom? expr)
          ; BEGIN OPTIONAL PROBLEM 2
-         'replace-this-line
+         expr
          ; END OPTIONAL PROBLEM 2
          )
         ((quoted? expr)
          ; BEGIN OPTIONAL PROBLEM 2
-         'replace-this-line
+         expr
          ; END OPTIONAL PROBLEM 2
          )
         ((or (lambda? expr)
@@ -50,23 +57,27 @@
                (params (cadr expr))
                (body   (cddr expr)))
            ; BEGIN OPTIONAL PROBLEM 2
-           'replace-this-line
+           (cons form (cons params (map let-to-lambda body)))
            ; END OPTIONAL PROBLEM 2
            ))
         ((let? expr)
          (let ((values (cadr expr))
                (body   (cddr expr)))
            ; BEGIN OPTIONAL PROBLEM 2
-           'replace-this-line
+           (let ((zipped (zip values)))
+                (let ((params (car zipped))
+                      (args (cadr zipped)))
+                  (cons (cons 'lambda (cons params (map let-to-lambda body))) (map let-to-lambda args))
+                  ))
            ; END OPTIONAL PROBLEM 2
            ))
         (else
          ; BEGIN OPTIONAL PROBLEM 2
-         'replace-this-line
+         (map let-to-lambda expr)
          ; END OPTIONAL PROBLEM 2
          )))
 
 ; Some utility functions that you may find useful to implement for let-to-lambda
 
 (define (zip pairs)
-  'replace-this-line)
+  (list (map car pairs) (map cadr pairs)))

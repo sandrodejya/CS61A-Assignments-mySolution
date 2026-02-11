@@ -24,7 +24,11 @@ def num_eights(n):
     ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n == 0:
+        return 0
+    else:
+        return num_eights(n // 10) + (n % 10 == 8)
+
 
 
 def digit_distance(n):
@@ -46,8 +50,10 @@ def digit_distance(n):
     ...       ['For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
-
+    if(n // 10 == 0):
+        return 0
+    else:
+        return digit_distance(n // 10) + abs(n // 10 % 10 - n % 10)
 
 def interleaved_sum(n, odd_func, even_func):
     """Compute the sum odd_func(1) + even_func(2) + odd_func(3) + ..., up
@@ -70,7 +76,13 @@ def interleaved_sum(n, odd_func, even_func):
     >>> check(HW_SOURCE_FILE, 'interleaved_sum', ['BitAnd', 'BitOr', 'BitXor']) # ban bitwise operators, don't worry about these if you don't know what they are
     True
     """
-    "*** YOUR CODE HERE ***"
+    if(n == 0):
+        return 0
+    else:
+        if(n // 2 != n / 2):
+            return interleaved_sum(n-1, odd_func, even_func) + odd_func(n)
+        else:
+            return interleaved_sum(n-1, odd_func, even_func) + even_func(n)
 
 
 def next_smaller_dollar(bill):
@@ -106,7 +118,22 @@ def count_dollars(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    dollars = [1, 5, 10, 20, 50, 100]
+
+    def count(total, n):
+        if total == 0:
+            return 1
+        elif total < 0:
+            return 0
+        elif n < 0:
+            return 0
+
+        else :
+            with_n = count(total - dollars[n], n)
+            without_n = count(total, n-1)
+            return with_n + without_n
+
+    return count(total, 5)
 
 
 def next_larger_dollar(bill):
@@ -142,7 +169,21 @@ def count_dollars_upward(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars_upward', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+
+    def count(total, bill):
+        if total == 0:
+            return 1
+        elif total < 0:
+            return 0
+        elif not bill :
+            return 0
+
+        else:
+            with_bill = count(total - bill, bill)
+            without_bill = count(total, next_larger_dollar(bill))
+            return with_bill + without_bill
+
+    return count(total, 1)
 
 
 def print_move(origin, destination):
@@ -177,7 +218,12 @@ def move_stack(n, start, end):
     Move the top disk from rod 1 to rod 3
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+    else:
+        move_stack(n - 1, start, 6 - start - end)
+        move_stack(1, start, end)
+        move_stack(n - 1, 6 - start - end, end)
 
 
 from operator import sub, mul
@@ -193,5 +239,5 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f: f(f))(lambda f: lambda n: 1 if n == 0 else n * f(f)(n - 1))
 
